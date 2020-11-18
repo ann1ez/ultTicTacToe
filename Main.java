@@ -2,10 +2,12 @@ import java.util.Scanner;
 import java.io.*;
 class Main 
 {
+  //private variables
+  private static int X=-1, Y=-1, currentPlayer=0, x, y;
   private static TicTacToe ultBoard = new TicTacToe();
-  private static int X = -1;
-  private static int Y = -1;
   private static TicTacToe[][] t = new TicTacToe[3][3];
+  private static Scanner sc = new Scanner(System.in);
+  private static String player1, player2;
 
   public static void main(String[] args) throws FileNotFoundException 
   {
@@ -15,31 +17,40 @@ class Main
     System.out.println("\n        Welcome to Ultimate TicTacToe!");
     for(int i=0; i< 50; i++)
       System.out.print('*');
-    System.out.println("\nPlayer 1 will be x. Player 2 will be o. Good luck!\n");
+    System.out.println();
+    System.out.println("What is the 1st player's name?");
+    player1 = sc.nextLine();
+    System.out.println("What is the 2nd player's name?");
+    player2 = sc.nextLine();
+    System.out.println("\n"+ player1 +" will be x. "+ player2 +" will be o. Good luck!\n");
 
     // Uncomment below to test cases
     //Scanner sc = new Scanner(new File("winX.dat"));
-    Scanner sc = new Scanner(System.in);
-    int currentPlayer = 0;
-
     //creating the boards
     for(int r=0; r<3; r++){
       for(int c=0; c<3; c++){
         t[r][c] = new TicTacToe();
       }
     }
-    
     print();
+
+    //playing the game
     while(!ultBoard.checkWin()){
-      int x = sc.nextInt();
-      int y = sc.nextInt();
-      if(X==-1 || (x/3 == X && y/3 == Y)){
-        t[x/3][y/3].play(x%3, y%3, currentPlayer);
-        updateBounds(x%3, y%3);
-        currentPlayer = (currentPlayer+1)%2;
+      validateInput();
+      t[x/3][y/3].play(x%3, y%3, currentPlayer);
+      //check for wins
+      if(t[x/3][y/3].checkWin()){
+        ultBoard.play(x/3, y/3, currentPlayer);
       }
+      //update values
+      updateBounds(x%3, y%3);
+      currentPlayer = (currentPlayer+1)%2;
       print();
     }
+
+    if(currentPlayer==0)
+      System.out.println(player1 + "wins!");
+    System.out.println(player2 + "wins!");
     sc.close();
   }
   
@@ -66,16 +77,55 @@ class Main
       System.out.println("| " + ultBoard.print(row));
     }
     System.out.println("- - - - -");
+
+    //print info on whose turn it is
+    //print where they have to play
+    if(currentPlayer == 0)
+      System.out.println("It is " +player1+ "'s turn");
+    else
+      System.out.println("It is " +player2+ "'s turn");
   }
 
-  public static boolean validateInput(int x, int y){
-    if(!(X==-1 || (x/3 == X && y/3 == Y)))
-      return false;
-    if(t[x/3][y/3].board(x%3, y%3)){
+  //verifyng that the input is a number 0-8
+  public static int verifyInput(){
+    int x = -1;
+    while(x == -1){
+      String input = sc.next();
+      try{
+        x = Integer.parseInt(input);
+        if(x<0||x>8){
+          System.out.println("Re-enter a number between 0 and 8 inclusive: ");
+          x = -1;
+        }
+      }
+      catch(NumberFormatException e){
+        System.out.print("Not a valid number. Please enter a number: ");
+      }
+    }
+    return x;
+  }
 
+  //validating that the numbers are in an open spot
+  public static void validateInput(){
+    boolean pass = false;
+    while(!pass){
+      System.out.print("Enter x value: ");
+      x = verifyInput();
+      System.out.print("Enter y value: ");
+      y = verifyInput();
+
+      if(!(X==-1 || (x/3 == X && y/3 == Y))){
+        System.out.println("The spot you have chosen is in the wrong area. Please re-enter. ");
+      }
+      else if(!(t[x/3][y/3].board[x%3][y%3] == ' ')){
+        System.out.println("The spot is already taken. Please re-enter. ");
+      }
+      else{
+        pass = true;
+      }
     }
   }
-
+  //updating the bounds
   public static void updateBounds(int x, int y){
     if(ultBoard.board[x][y] == ' '){
       X = x; Y = y;
@@ -83,5 +133,4 @@ class Main
     else
       X = -1;
   }
-
 }
