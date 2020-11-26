@@ -6,11 +6,16 @@ class Main
   private static int X=-1, Y=-1, currentPlayer=0, x, y;
   private static TicTacToe ultBoard = new TicTacToe();
   private static TicTacToe[][] t = new TicTacToe[3][3];
-  private static Scanner sc = new Scanner(System.in);
+  //private static Scanner sc = new Scanner(System.in);
+  private static Scanner sc;
   private static String player1, player2;
 
   public static void main(String[] args) throws FileNotFoundException 
   {
+    //testing cases
+    sc = new Scanner(new File("tie.dat"));
+    //sc = new Scanner(System.in);
+    
     // print intro
     for(int i=0; i< 50; i++)
       System.out.print('*');
@@ -24,8 +29,6 @@ class Main
     player2 = sc.nextLine();
     System.out.println("\n"+ player1 +" will be x. "+ player2 +" will be o. Good luck!\n");
 
-    // Uncomment below to test cases
-    //Scanner sc = new Scanner(new File("winX.dat"));
     //creating the boards
     for(int r=0; r<3; r++){
       for(int c=0; c<3; c++){
@@ -49,8 +52,9 @@ class Main
     }
 
     if(currentPlayer==0)
-      System.out.println(player1 + "wins!");
-    System.out.println(player2 + "wins!");
+      System.out.println(player1 + " wins!");
+    else
+      System.out.println(player2 + " wins!");
     sc.close();
   }
   
