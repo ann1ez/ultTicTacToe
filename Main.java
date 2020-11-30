@@ -52,9 +52,9 @@ class Main
     }
 
     if(currentPlayer==0)
-      System.out.println(player1 + " wins!");
+      System.out.println(player1 + " (x) wins!");
     else
-      System.out.println(player2 + " wins!");
+      System.out.println(player2 + " (o) wins!");
     sc.close();
   }
   
@@ -85,9 +85,9 @@ class Main
     //print info on whose turn it is
     //print where they have to play
     if(currentPlayer == 0)
-      System.out.println("It is " +player1+ "'s turn");
+      System.out.println("It is " +player1+ "'s turn: x");
     else
-      System.out.println("It is " +player2+ "'s turn");
+      System.out.println("It is " +player2+ "'s turn: o");
   }
 
   //verifyng that the input is a number 0-8
