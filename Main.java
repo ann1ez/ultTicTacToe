@@ -38,29 +38,37 @@ class Main
     print();
 
     //playing the game
-    while(!ultBoard.checkWin()){
+    while(!ultBoard.checkWin() && !ultBoard.checkTie()){
+      //print info on whose turn it is
+      //print where they have to play
+      if(currentPlayer == 0)
+        System.out.println("It is " +player1+ "'s turn: x");
+      else
+        System.out.println("It is " +player2+ "'s turn: o");
+      
+      //record input
       validateInput();
       t[x/3][y/3].play(x%3, y%3, currentPlayer);
       //check for wins
       if(t[x/3][y/3].checkWin()){
         ultBoard.play(x/3, y/3, currentPlayer);
       }
+      else if(t[x/3][y/3].checkTie()){
+        ultBoard.play(x/3, y/3, -1);
+      }
       //update values
       updateBounds(x%3, y%3);
       currentPlayer = (currentPlayer+1)%2;
       print();
     }
-
-    if(currentPlayer==0)
-      System.out.println(player1 + " (x) wins!");
-    else
-      System.out.println(player2 + " (o) wins!");
     sc.close();
+    System.out.println(ultBoard.gameOver(currentPlayer, player1, player2));
+    
   }
   
   public static void print(){
     //detailed board
-    System.out.println("    0 1 2   3 4 5   6 7 8");
+    System.out.println("\n    0 1 2   3 4 5   6 7 8");
     System.out.println("  - - - - - - - - - - - - -");
 
     for(int row = 0; row<9;){
@@ -81,13 +89,6 @@ class Main
       System.out.println("| " + ultBoard.print(row));
     }
     System.out.println("- - - - -");
-
-    //print info on whose turn it is
-    //print where they have to play
-    if(currentPlayer == 0)
-      System.out.println("It is " +player1+ "'s turn: x");
-    else
-      System.out.println("It is " +player2+ "'s turn: o");
   }
 
   //verifyng that the input is a number 0-8
@@ -113,12 +114,15 @@ class Main
   public static void validateInput(){
     boolean pass = false;
     while(!pass){
-      System.out.print("Enter x value: ");
+      System.out.print("Enter row number: ");
       x = verifyInput();
-      System.out.print("Enter y value: ");
+      System.out.print("Enter column: ");
       y = verifyInput();
 
-      if(!(X==-1 || (x/3 == X && y/3 == Y))){
+      if(ultBoard.board[x/3][y/3] != ' '){
+        System.out.println("The spot you have chosen is in a square that already has a win. Please re-enter. ");
+      }
+      else if(!(X==-1 || (x/3 == X && y/3 == Y))){
         System.out.println("The spot you have chosen is in the wrong area. Please re-enter. ");
       }
       else if(!(t[x/3][y/3].board[x%3][y%3] == ' ')){
@@ -131,7 +135,7 @@ class Main
   }
   //updating the bounds
   public static void updateBounds(int x, int y){
-    if(ultBoard.board[x][y] == ' '){
+    if(ultBoard.board[x][y] == ' '){ //NOT WORKING
       X = x; Y = y;
     }
     else
