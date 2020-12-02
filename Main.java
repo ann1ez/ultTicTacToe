@@ -6,15 +6,14 @@ class Main
   private static int X=-1, Y=-1, currentPlayer=0, x, y;
   private static TicTacToe ultBoard = new TicTacToe();
   private static TicTacToe[][] t = new TicTacToe[3][3];
-  //private static Scanner sc = new Scanner(System.in);
   private static Scanner sc;
   private static String player1, player2;
 
   public static void main(String[] args) throws FileNotFoundException 
   {
     //testing cases
-    sc = new Scanner(new File("tie.dat"));
-    //sc = new Scanner(System.in);
+    //sc = new Scanner(new File("tie.dat"));
+    sc = new Scanner(System.in);
     
     // print intro
     for(int i=0; i< 50; i++)
@@ -47,7 +46,9 @@ class Main
         System.out.println("It is " +player2+ "'s turn: o");
       
       //record input
-      validateInput();
+      validateInput(); X= x%3; Y = y%3;
+      System.out.println("ultimate row: " + X);
+      System.out.println("ultimate col: " + Y);
       t[x/3][y/3].play(x%3, y%3, currentPlayer);
       //check for wins
       if(t[x/3][y/3].checkWin()){
@@ -57,7 +58,10 @@ class Main
         ultBoard.play(x/3, y/3, -1);
       }
       //update values
-      updateBounds(x%3, y%3);
+      //updateBounds(x%3, y%3);
+      if(ultBoard.board[X][Y] != ' '){
+        X = -1;
+      }
       currentPlayer = (currentPlayer+1)%2;
       print();
     }
@@ -116,11 +120,13 @@ class Main
     while(!pass){
       System.out.print("Enter row number: ");
       x = verifyInput();
+      System.out.println(x);
       System.out.print("Enter column: ");
       y = verifyInput();
+      System.out.println(y);
 
       if(ultBoard.board[x/3][y/3] != ' '){
-        System.out.println("The spot you have chosen is in a square that already has a win. Please re-enter. ");
+        System.out.println("The spot you have chosen is in a square that already has a win/tie. Please re-enter. ");
       }
       else if(!(X==-1 || (x/3 == X && y/3 == Y))){
         System.out.println("The spot you have chosen is in the wrong area. Please re-enter. ");
@@ -132,13 +138,5 @@ class Main
         pass = true;
       }
     }
-  }
-  //updating the bounds
-  public static void updateBounds(int x, int y){
-    if(ultBoard.board[x][y] == ' '){ //NOT WORKING
-      X = x; Y = y;
-    }
-    else
-      X = -1;
   }
 }
