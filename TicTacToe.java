@@ -25,8 +25,11 @@ public class TicTacToe
     if(playernum == 0){
       board[xcoor][ycoor] = 'x';
     }
-    else{
+    else if (playernum == 1){
       board[xcoor][ycoor] = 'o';
+    }
+    else{
+      board[xcoor][ycoor] = '~';
     }
   }
   
@@ -49,5 +52,24 @@ public class TicTacToe
         return true;
     }
     return false;
+  }
+
+  public boolean checkTie(){
+    for(int i=0; i<3; i++){
+      for(int j=0; j<3; j++){
+        if(board[i][j] == ' ')
+          return false;
+      }
+    }
+    return true;
+  }
+
+  public String gameOver(int currentPlayer, String player1, String player2){
+    if(checkTie())
+      return "Game over: tie!";
+    else if(currentPlayer==1)
+      return "Game over: " + player1 + " (x) wins!";
+    else
+      return "Game over: " + player2 + " (o) wins!";
   }
 }
